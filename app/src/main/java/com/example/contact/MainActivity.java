@@ -13,12 +13,12 @@ import android.os.Bundle;
 import android.provider.CallLog;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
+import android.telecom.Call;
 import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -89,23 +89,22 @@ public class MainActivity extends AppCompatActivity {
         }
         return null;
     }
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public void getCallLog() {
-        String stringOutput = "";
-        Uri uriCallLogs = Uri.parse("content://call_log/calls");
-        Cursor cursorCallLogs = getContentResolver().query(uriCallLogs, null,null,null);
-        cursorCallLogs.moveToFirst();
-        do {
-            String stringNumber = cursorCallLogs.getString(cursorCallLogs.getColumnIndex(CallLog.Calls.NUMBER));
-            String stringDuration = cursorCallLogs.getString(cursorCallLogs.getColumnIndex(CallLog.Calls.DURATION));
-            String stringDate = cursorCallLogs.getString(cursorCallLogs.getColumnIndex(CallLog.Calls.DATE));
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE, dd-MMM-yyyy hh-mm-ss a");
-            String date = simpleDateFormat.format(cursorCallLogs.get(cursorCallLogs.getColumnIndex(CallLog.Calls.DATE)));
-            stringOutput = stringOutput + "Number: " + stringNumber
-                    + "\nDuration: " + stringDuration
-                    + "\n Date: " + date
-                    + "\n\n";
-        }while (cursorCallLogs.moveToNext());
-        Toast.makeText(this, stringOutput, Toast.LENGTH_SHORT).show();
+    public ArrayList getCallLog() {
+        ArrayList<mCallLog> callLogArrayList = new ArrayList<>();
+        Cursor managedCursor = managedQuery(CallLog.Calls.CONTENT_URI, null, null, null, null);
+        int number = managedCursor.getColumnIndex(CallLog.Calls.NUMBER);
+//        int type = managedCursor.getColumnIndex(CallLog.Calls.TYPE);
+        int date = managedCursor.getColumnIndex(CallLog.Calls.DATE);
+        int duration = managedCursor.getColumnIndex(CallLog.Calls.DURATION);
+        while (managedCursor.moveToNext()) {
+            String phNumber = managedCursor.getString(number);
+            String callDate = managedCursor.getString(date);
+            Date callDayTime = new Date(Long.valueOf(callDate));
+            String callDuration = managedCursor.getString(duration);
+            String dayTime = "[ " + callDuration +" ]"+ " - " + callDayTime;
+            callLogArrayList.add(new mCallLog(phNumber, dayTime));
+        }
+        //managedCursor.close();
+        return callLogArrayList;
     }
 }

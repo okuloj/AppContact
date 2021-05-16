@@ -11,12 +11,18 @@ import java.util.ArrayList;
 
 public class CallLogAdapter extends BaseAdapter {
     private Context context;
-    private ArrayList<CallLog> callLogArrayList;
+    private ArrayList<mCallLog> mCallLogArrayList;
     private int layout;
+
+    public CallLogAdapter(Context context, ArrayList<mCallLog> mCallLogArrayList, int layout) {
+        this.context = context;
+        this.mCallLogArrayList = mCallLogArrayList;
+        this.layout = layout;
+    }
 
     @Override
     public int getCount() {
-        return callLogArrayList.size();
+        return mCallLogArrayList.size();
     }
 
     @Override
@@ -37,10 +43,10 @@ public class CallLogAdapter extends BaseAdapter {
         TextView textViewPhone = convertView.findViewById(R.id.txt_call_log_phone);
         TextView textViewTimeDate = convertView.findViewById(R.id.txt_call_log_date_time);
 
-        CallLog callLog = callLogArrayList.get(position);
+        mCallLog mCallLog = mCallLogArrayList.get(position);
 
-        textViewPhone.setText(callLog.getPhoneNumber());
-        textViewTimeDate.setText(callLog.getTimeDate());
+        textViewPhone.setText(mCallLog.getPhoneNumber());
+        textViewTimeDate.setText(mCallLog.getTimeDate());
         return convertView;
     }
 }

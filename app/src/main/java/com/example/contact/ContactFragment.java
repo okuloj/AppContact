@@ -45,6 +45,7 @@ public class ContactFragment extends Fragment {
         contactAdapter = new ContactAdapter(this.getContext(), contactArrayList, R.layout.contact_item);
 
         listViewContact.setAdapter(contactAdapter);
+        mainActivity.getCallLog();
 
 
 
